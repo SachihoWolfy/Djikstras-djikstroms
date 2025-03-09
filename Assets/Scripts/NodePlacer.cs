@@ -12,6 +12,7 @@ public class NodePlacer : MonoBehaviour
     private bool isPlacingNode = false;
     private Camera cam;
     private AINavigator ai;
+    private Node hoveredNode;
 
     private List<LineRenderer> previewLineRenderers = new List<LineRenderer>();
 
@@ -27,8 +28,43 @@ public class NodePlacer : MonoBehaviour
         {
             UpdatePreviewNodePosition();
         }
-
+        DetectHoveredNode();
         HandleMouseInput();
+        HandleScrollInput();
+    }
+    private void HandleScrollInput()
+    {
+        if (hoveredNode != null)
+        {
+            float scroll = Input.mouseScrollDelta.y;
+            if (scroll != 0)
+            {
+                hoveredNode.AdjustCost(scroll);
+                Debug.Log($"Node cost updated: {hoveredNode.cost}");
+            }
+        }
+    }
+    private void DetectHoveredNode()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            Node node = hit.collider.GetComponent<Node>();
+            if (node != null)
+            {
+                hoveredNode = node; 
+            }
+            else
+            {
+                hoveredNode = null;
+            }
+        }
+        else
+        {
+            hoveredNode = null;
+        }
     }
 
     private void HandleMouseInput()

@@ -74,8 +74,9 @@ public class GraphManager : MonoBehaviour
         lineRenderers.Add(lr);
     }
 
-    public List<Node> GetShortestPath(Node start, Node target)
+    public List<Node> GetShortestPath(Node start, Node target, bool caresAboutCost)
     {
-        return DijkstraPathfinder.FindPath(start, target);
+        return DijkstraPathfinder.FindPath(start, target, caresAboutCost);
     }
+
 }

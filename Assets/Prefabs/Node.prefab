@@ -104,7 +104,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7167524304672786781
 MonoBehaviour:
@@ -120,3 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectionRadius: 5
   neighbors: []
+  cost: 1
+  minCost: 1
+  maxCost: 10
+  nodeRenderer: {fileID: 0}

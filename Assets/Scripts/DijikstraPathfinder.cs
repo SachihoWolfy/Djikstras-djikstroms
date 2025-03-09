@@ -3,11 +3,14 @@ using UnityEngine;
 
 public static class DijkstraPathfinder
 {
-    public static List<Node> FindPath(Node start, Node target)
+    public static List<Node> FindPath(Node start, Node target, bool caresAboutCost)
     {
+        // Dictionary, because... er... dirty joke I'm not gonna make but these are pretty heccin cool!
+        // Turns out, assigning things to things is pretty efficient
         Dictionary<Node, float> distances = new Dictionary<Node, float>();
         Dictionary<Node, Node> previous = new Dictionary<Node, Node>();
         List<Node> unvisited = new List<Node>();
+
         foreach (Node node in GameObject.FindObjectsOfType<Node>())
         {
             distances[node] = float.MaxValue;
@@ -34,8 +37,15 @@ public static class DijkstraPathfinder
                 {
                     continue;
                 }
-
-                float alt = distances[current] + Vector3.Distance(current.transform.position, neighbor.transform.position);
+                float alt;
+                if (caresAboutCost)
+                {
+                    alt = distances[current] + (Vector3.Distance(current.transform.position, neighbor.transform.position) * neighbor.cost);
+                }
+                else
+                {
+                    alt = distances[current] + (Vector3.Distance(current.transform.position, neighbor.transform.position));
+                }
                 if (alt < distances[neighbor])
                 {
                     distances[neighbor] = alt;

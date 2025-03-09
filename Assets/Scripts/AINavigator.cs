@@ -10,13 +10,13 @@ public class AINavigator : MonoBehaviour
     private List<Node> path = new List<Node>();
     private int currentIndex = 0;
     private Node currentTarget;
+    public bool caresAboutCost;
 
     private void Start()
     {
         CreatePathLineRenderer();
         PickNewTarget();
     }
-
     private void Update()
     {
         
@@ -62,7 +62,7 @@ public class AINavigator : MonoBehaviour
         } while (randomTarget == currentTarget && randomTarget != null);
 
         currentTarget = randomTarget;
-        path = graphManager.GetShortestPath(GetClosestNode(), currentTarget);
+        path = graphManager.GetShortestPath(GetClosestNode(), currentTarget, caresAboutCost);
         currentIndex = 0;
         UpdatePathLineRenderer();
     }
@@ -90,7 +90,7 @@ public class AINavigator : MonoBehaviour
     public void RecalculatePath()
     {
         path.Clear();
-        path = graphManager.GetShortestPath(GetClosestNode(), currentTarget);
+        path = graphManager.GetShortestPath(GetClosestNode(), currentTarget, caresAboutCost);
         currentIndex = 0;
         UpdatePathLineRenderer();
     }
@@ -127,11 +127,29 @@ public class AINavigator : MonoBehaviour
         {
             GameObject lineObject = new GameObject("PathLine");
             pathLineRenderer = lineObject.AddComponent<LineRenderer>();
-            pathLineRenderer.startWidth = 0.1f;
-            pathLineRenderer.endWidth = 0.1f;
+            pathLineRenderer.startWidth = 0.2f;
+            pathLineRenderer.endWidth = 0.2f;
             pathLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-            pathLineRenderer.startColor = Color.green;
-            pathLineRenderer.endColor = Color.green;
+            if (caresAboutCost)
+            {
+                pathLineRenderer.startColor = Color.green;
+                pathLineRenderer.endColor = Color.green;
+            }
+            else
+            {
+                pathLineRenderer.startColor = Color.red;
+                pathLineRenderer.endColor = Color.red;
+            }
         }
     }
+    public void SetTargetNode(Node target)
+    {
+        if (target == null) return;
+
+        currentTarget = target;
+        path = graphManager.GetShortestPath(GetClosestNode(), currentTarget, caresAboutCost);
+        currentIndex = 0;
+        UpdatePathLineRenderer();
+    }
+
 }

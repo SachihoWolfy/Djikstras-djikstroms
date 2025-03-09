@@ -5,12 +5,28 @@ public class Node : MonoBehaviour
 {
     public float connectionRadius = 5f;
     public List<Node> neighbors = new List<Node>();
+    public float cost = 1f;
+    public float minCost = 1f;
+    public float maxCost = 10f;
+    public Renderer nodeRenderer;
 
     private void Start()
     {
+        nodeRenderer = GetComponent<Renderer>();
         AutoConnect();
+        UpdateColor();
     }
-
+    public void AdjustCost(float delta)
+    {
+        cost = Mathf.Clamp(cost + delta,1f,10f);
+        UpdateColor();
+    }
+    private void UpdateColor()
+    {
+        float t = Mathf.InverseLerp(minCost, maxCost, cost);
+        Color nodeColor = Color.Lerp(Color.green, Color.red, t);
+        nodeRenderer.material.color = nodeColor;
+    }
     public void AutoConnect()
     {
         neighbors.Clear(); 
